@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notes App</title>
+
+  <!-- Include Tailwind first -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Configure Tailwind AFTER loading it -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {},
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-white dark:bg-black text-black dark:text-white transition-all duration-300">
+
+  <div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-6xl space-y-6">
+
+      <!-- Header and Toggle -->
+      <div class="flex justify-between items-center">
+        <h1 class="text-4xl font-bold flex items-center gap-2">📝 <span>This is notes app</span></h1>
+        <button id="toggleBtn" class="bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-4 py-2 rounded-md shadow-md transition">
+          🌓 Light Mode
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form action="/create" method="POST" class="space-y-4 bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-lg">
+        <input class="w-full p-4 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white" type="text" name="title" placeholder="Title Goes here" required />
+        <textarea class="w-full p-4 rounded-md bg-gray-200 dark:bg-gray-700 text-black dark:text-white h-28 resize-none" name="details" placeholder="Write your task details here" required></textarea>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">➕ Create task</button>
+      </form>
+
+      <!-- Files -->
+      <% if(files.length > 0) { %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% files.forEach(function(val) { %>
+            <div class="bg-gray-200 dark:bg-gray-800 text-black dark:text-white p-5 rounded-lg shadow-md">
+              <h2 class="text-lg font-semibold mb-2"><%= val %></h2>
+              <div class="flex gap-3 flex-wrap">
+                <button onclick="openModal('<%= val %>')" class="text-blue-600 hover:underline">Read</button>
+                <form action="/delete/<%= val %>" method="POST" onsubmit="return confirm('Delete this note?');">
+                  <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="text-gray-400 text-center">No tasks yet</p>
+      <% } %>
+
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-900 text-black dark:text-white p-6 rounded-lg w-11/12 max-w-lg relative">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-xl font-bold">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">📄 Task File</h2>
+      <p id="modal-content">Loading content...</p>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    // Toggle Dark Mode
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Modal Logic
+    function openModal(fileName) {
+      document.getElementById('modal').classList.remove('hidden');
+      fetch(`/files/${fileName}`)
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById('modal-content').textContent = data;
+        })
+        .catch(() => {
+          document.getElementById('modal-content').textContent = "⚠️ Failed to load content.";
+        });
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+      document.getElementById('modal-content').textContent = "Loading content...";
+    }
+  </script>
+
+</body>
+</html>
