@@ -6,11 +6,11 @@ A full-stack Notes Application built using **Node.js**, **Express**, **EJS**, an
 
 ## 🚀 Features
 
-- 📄 Create and save notes as `.text` files
-- 🔍 View notes in a popup modal (without reloading the page)
-- 🌓 Toggle between Light & Dark mode
-- 🎨 TailwindCSS-powered clean and responsive UI
-- ⚡ Instant file access via Express + EJS rendering
+- 📄 Create and save notes as `.text` files.
+- 🔍 View notes in a popup modal (without reloading the page).
+- 🌓 Toggle between Light & Dark mode.
+- 🎨 TailwindCSS-powered clean and responsive UI.
+- ⚡ Instant file access via Express + EJS rendering.
 
 ---
 
